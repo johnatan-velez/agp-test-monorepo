@@ -2,7 +2,8 @@
   "name": "@test/shared",
   "version": "1.0.0",
   "scripts": {
-    "build": "echo 'Build OK'"
+    "build": "echo 'Build OK'",
+    "test": "echo 'Test OK'"
   },
   "dependencies": {
     "lodash": "4.17.20",

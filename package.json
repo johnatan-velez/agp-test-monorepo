@@ -1,7 +1,5 @@
 {
   "name": "agp-test-monorepo",
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ]
+  "version": "1.0.0",
+  "private": true
 }

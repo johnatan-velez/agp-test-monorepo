@@ -1,26 +1,30 @@
 # AGP Test Monorepo
 
-Test repository for verifying AGP (Agent P) fix for duplicate package names in PR titles.
+Test repository for verifying AGP (Agent P) fix for GUIDE-2036 - duplicate package names in PR titles.
 
 ## Structure
 
-This monorepo has 3 packages with overlapping dependencies:
+This repo simulates a multi-project setup where the same packages appear in multiple projects:
 
-| Package | lodash | axios | eslint |
+| Project | lodash | axios | eslint |
 |---------|--------|-------|--------|
-| @test/ui | ✓ | ✓ | ✓ |
-| @test/admin | ✓ | ✓ | ✓ |
-| @test/shared | ✓ | - | ✓ |
+| `@test/ui` | ✓ (4.17.20) | ✓ (0.27.0) | ✓ (8.40.0) |
+| `@test/admin` | ✓ (4.17.20) | ✓ (0.27.0) | ✓ (8.40.0) |
+| `@test/shared` | ✓ (4.17.20) | - | ✓ (8.40.0) |
 
-Expected AGP behavior:
-- `lodash` should appear with "(3 workspaces)" annotation
-- `axios` should appear with "(2 workspaces)" annotation
-- `eslint` should appear with "(3 workspaces)" annotation
+## Expected AGP behavior (GUIDE-2036 fix)
 
-## Testing GUIDE-2036
+When AGP detects the same outdated package across multiple projects, it should:
 
-This repo tests the fix for duplicate package names in PR title/body when the same dependency is updated across multiple workspaces.
+1. **Deduplicate package names** in the PR title
+2. **Show workspace count** for duplicate packages
 
-Expected PR title format: `Update lodash (3 workspaces) + axios (2 workspaces) + eslint (3 workspaces)`
+### Expected PR title format:
+```
+Update lodash (3 workspaces) + axios (2 workspaces) + eslint (3 workspaces)
+```
 
-NOT: `Update lodash + lodash + lodash + axios + axios + eslint + eslint + eslint`
+### NOT (old buggy behavior):
+```
+Update lodash + lodash + lodash + axios + axios + eslint + eslint + eslint
+```

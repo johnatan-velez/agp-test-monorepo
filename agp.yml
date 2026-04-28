@@ -67,41 +67,31 @@ automerge:
 
 # How to group dependency updates into PRs
 grouping:
-  strategy: individual  # Options: individual, ecosystem, all
+  strategy: all  # Group all updates into one PR to test workspace deduplication
   rules: []
-  # Example: group all minor/patch updates together
-  # rules:
-  #   - name: "minor-and-patch"
-  #     match:
-  #       updateType: ["minor", "patch"]
-  #     strategy: all
 
 # Monorepo per-project configuration
-# Each sub-project gets its own validation commands
 projects:
   ui:
-    path: packages/ui
+    path: ui
     ecosystem: npm
     validation:
       enabled: true
       commands:
-        - "npm install"
-        - "npm run build --workspace=@test/ui"
+        - "cd ui && npm run build"
 
   admin:
-    path: packages/admin
+    path: admin
     ecosystem: npm
     validation:
       enabled: true
       commands:
-        - "npm install"
-        - "npm run build --workspace=@test/admin"
+        - "cd admin && npm run build"
 
   shared:
-    path: packages/shared
+    path: shared
     ecosystem: npm
     validation:
       enabled: true
       commands:
-        - "npm install"
-        - "npm run build --workspace=@test/shared"
+        - "cd shared && npm run build"

@@ -1,6 +1,9 @@
 {
   "name": "@test/shared",
   "version": "1.0.0",
+  "scripts": {
+    "build": "echo 'Build OK'"
+  },
   "dependencies": {
     "lodash": "4.17.20",
     "eslint": "8.40.0"

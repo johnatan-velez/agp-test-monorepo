@@ -1,6 +1,9 @@
 {
   "name": "@test/admin",
   "version": "1.0.0",
+  "scripts": {
+    "build": "echo 'Build OK'"
+  },
   "dependencies": {
     "lodash": "4.17.20",
     "axios": "0.27.0",

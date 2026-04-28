@@ -1,0 +1,83 @@
+# Sonatype Guide — Agentic Patches (AGP) Workflow
+# Learn more: https://guide.sonatype.com
+# File: .github/workflows/agp_workflow.yml
+
+name: "Sonatype Guide - Agentic Patches"
+
+on:
+  # Weekly scan every Monday at 09:00 UTC
+  schedule:
+    - cron: '0 9 * * 1'
+  # Manual trigger with configurable inputs
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Scan mode (full, quick, security-only)'
+        required: false
+        default: 'full'
+        type: string
+      vulnerabilities:
+        description: 'Comma-separated vulnerability IDs to target (optional)'
+        required: false
+        type: string
+      verbose:
+        description: 'Enable verbose logging'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+  # id-token: write  # Uncomment if using AWS Bedrock OIDC
+
+concurrency:
+  group: "agp-workflow"
+  cancel-in-progress: false
+
+jobs:
+  agp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: AWS OIDC credentials (for Bedrock users only)
+      # Uncomment this step if using AWS Bedrock with OIDC
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+      #     aws-region: us-east-1
+
+      # Step 3: Private registry authentication
+      # Uncomment and configure if using a private npm registry
+      # - name: Configure private npm registry
+      #   run: |
+      #     echo "registry=https://your-registry.example.com/" > .npmrc
+      #     echo "//your-registry.example.com/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
+
+      # Step 4: Run Sonatype AGP Action
+      - name: Run Agentic Patches
+        uses: sonatype/agp-action@v1
+        with:
+          mode: ${{ inputs.mode || 'full' }}
+          vulnerabilities: ${{ inputs.vulnerabilities }}
+          create-pr: 'true'
+          dry-run: 'false'
+          verbose: ${{ inputs.verbose || 'false' }}
+          docker-registry: sonatype.repo.sonatype.app/docker-all
+          # docker-username: ${{ secrets.DOCKER_USERNAME }}  # Uncomment for private Docker registry
+          # docker-password: ${{ secrets.DOCKER_PASSWORD }}  # Uncomment for private Docker registry
+          # npmrc-content: ${{ secrets.NPMRC_CONTENT }}  # Uncomment for private npm registry
+        env:
+          # Anthropic API key (comment out if using AWS Bedrock)
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Guide API token for dashboard tracking
+          AGP_API_TOKEN: ${{ secrets.AGP_API_TOKEN }}
+          AGP_API_URL: https://api.guide.sonatype.com
+          # GitHub token (uses default since no restrictions)
+          GITHUB_TOKEN: ${{ github.token }}

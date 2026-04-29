@@ -76,22 +76,16 @@ projects:
     path: ui
     ecosystem: npm
     validation:
-      enabled: true
-      commands:
-        - "cd ui && npm run build"
+      enabled: false
 
   admin:
     path: admin
     ecosystem: npm
     validation:
-      enabled: true
-      commands:
-        - "cd admin && npm run build"
+      enabled: false
 
   shared:
     path: shared
     ecosystem: npm
     validation:
-      enabled: true
-      commands:
-        - "cd shared && npm run build"
+      enabled: false

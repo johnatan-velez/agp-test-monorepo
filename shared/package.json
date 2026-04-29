@@ -6,7 +6,7 @@
     "test": "echo 'Test OK'"
   },
   "dependencies": {
-    "lodash": "4.17.19",
-    "eslint": "8.39.0"
+    "underscore": "1.12.0",
+    "chalk": "4.0.0"
   }
 }
